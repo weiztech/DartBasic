@@ -1,109 +1,71 @@
-// Sink and Streams
-import 'dart:async';
+// Generic class
 
-class Pilot {
-  String name;
-  Pilot(this.name);
+void main() {
+  var space_earth = Space<Earth, Mars>.return_earth(Earth());
+  print(space_earth);
+
+  var space_mars = Space<Earth, Mars>.return_mars(Mars());
+  print(space_mars);
 }
 
-class Plane {
-  String name;
-  Pilot pilot;
+class Mars {}
 
-  Plane(this.name, this.pilot);
+class Earth {}
+
+class Space<T, S> {
+
+  Space.create();
+
+  factory Space.return_earth(T planet){
+    return Space.create();
+  }
+
+  factory Space.return_mars(S planet){
+    return Space.create();
+  }
 }
 
+/*
+class Counter<T extends num> {
+   List<T> _items = new List<T>();
+   void addAll(Iterable<T> iterable) => _items.add(iterable);
+   void add(T value) => _items.add(value);
+   
+   T elementAt(int index) => _items.elementAt(index);
+  
+   void total() {  
+      num value = 0;
+      _items.forEach((item){
+            values = values + item;
+      });
+      print(value);
+    }
+}*/
 
-void main(){
-  final pilot = Pilot("Honey Boney");
-  final pilotz = Pilot("Gomu Gomu");
-
-  // way 1 (Basic)
-  print("Start Controller 1");
-  final controler = StreamController();
-
-  controler.stream
-    .listen(
-      (data) => print('Got eem! Pilot `${data.name}` is ready'),
-      onError: (err) => print('Got an error! $err'),
-      onDone: () => print('Done 1'),
-      cancelOnError: false,
-    );
-  controler.sink.add(pilot);
-  controler.sink.add(pilotz);
-  controler.addError("Errror here");
-  controler.sink.close();
-
-  // way 2 (Using StreamTransformer)
-  print("Start Controller 2");
-  final controler2 = StreamController<Pilot>();
-
-  final streamTransformer = StreamTransformer<Pilot, Plane>.fromHandlers(
-    handleData: (Pilot pilot, EventSink sink) {
-      sink.add(Plane("JET", pilot));
-    }, 
-    handleError: (error, stacktrace, sink) {
-      sink.addError('$error');
-    }, 
-    handleDone: (sink) {
-      sink.close();
-    },
-  );
-
-  controler2.sink.add(pilot);
-  controler2.sink.add(pilotz);
-  controler2.sink.addError("Hey error Controller 2");
-  controler2.sink.close();
-
-  controler2.stream
-    .map((data){
-      print("MAP data $data");
-      return data;
-    })
-    .transform(streamTransformer)
-    .listen(
-      (data) => print("READY: ${data.name} with pilot ${data.pilot.name}"),
-      onDone: () => print("Done 2"),
-      onError: (err) => print("Error controller 2: $err"),
-      cancelOnError: false,
-    );
+/*
+main() {
+    List values = [1, 2, 4, 5];
+    print(subtract(15, values));
 }
+T subtract<T extends num>(T value, List<T> items){
+    T x = items;
+    items.forEach((values) {
+         x = x - value;
+    });
+    return x;
+}*/
 
 
 /*
-void main() {
-  // just another version without `Type inference`
-  print("Start Controller 2");
-  final controler2 = StreamController();
-
-  final streamTransformer = StreamTransformer.fromHandlers(
-    handleData: (pilot, EventSink sink) {
-      sink.add(Plane("JET", pilot));
-    }, 
-    handleError: (error, stacktrace, sink) {
-      sink.addError('$error');
-    }, 
-    handleDone: (sink) {
-      sink.close();
-    },
-  );
-
-  controler2.sink.add(pilot);
-  controler2.sink.add(pilotz);
-  controler2.sink.addError("Hey error Controller 2");
-  controler2.sink.close();
-
-  controler2.stream
-    .map((data){
-      print("MAP data $data");
-      return data;
-    })
-    .transform(streamTransformer)
-    .listen(
-      (data) => print("READY: ${data.name} with pilot ${data.pilot.name}"),
-      onDone: () => print("Done 2"),
-      onError: (err) => print("Error controller 2: $err"),
-      cancelOnError: false,
-    );
+void main(){  
+   add<int>(1, 2); // prints 3
+   add<double>(1.0, 2.0); // prints 3.0
+   add<String>("Sharad", "Ghimire"); // prints SharadGhimire
+   addNumbers(1, 2); // Gives error but still work??
+ }
+void add<T>(T a, T b) {   // T is shorthand for type
+    print(a + b); // But, for String, the operator + isn't defined for the class 'Object'
 }
-*/
+void addNumbers<T extends num>(T a, T b){ // num includes int and doubles so it does not work for String
+    print(a +b);
+}*/
