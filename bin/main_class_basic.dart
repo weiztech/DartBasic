@@ -1,3 +1,5 @@
+import 'lib/utils.dart' show PrivatePublic;
+
 class Car {
   
   String name;
@@ -86,4 +88,10 @@ void main() {
 
   print("$tesla, ${tesla.runtimeType}");
 
+  // Private and Public Class
+  const lib = PrivatePublic(20, 10);
+  // try call public method and property
+  print("${lib.callPublic()} ${lib.number}");
+  // private method and property cannot be accessed from outside lib/module class file
+  // only can be accessed from the same file that created the private code
 }
