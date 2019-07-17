@@ -103,7 +103,7 @@ void main() async {
   final Link _link = _authLink.concat(_httpLink as Link);
   print(_link.request);
   final GraphQLClient _client = GraphQLClient(
-    cache: InMemoryCache(),
+    cache: InMemoryCache(storageProvider: null),
     link: _link,
   );
 
